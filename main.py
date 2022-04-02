@@ -8,12 +8,14 @@ import json
 
 client = commands.Bot(command_prefix = '.')
 
-statuses = ['i can .help you', 'figure it out yourself', '.invite', 'ur mom needs .help', 'with my toys, .help', 'say .8ball nerds', 'stfu retro didnt make this he needs .help', 'qwertyuiopasdfghjklzxcvbnm', 'its next to the slash key']
+statuses = ['imagine using slash commands', 'figure it out yourself', '.gitinvite', 'ur mom needs .help', 'with my toys, .help', 'say .8ball nerds', 'stfu retro didnt make this he needs .help', 'qwertyuiopasdfghjklzxcvbnm', 'its the next to the slash key']
 
 @client.event
 async def on_ready():
     change_status.start()
     print('Bot is ready!')
+    channel = client.get_channel(958497979994632273)
+    await channel.send("Pybot is back lol also no more apeil fools")
 
 @client.event
 async def on_command_error(ctx, error):
@@ -50,15 +52,16 @@ async def _8ball(ctx, *, question):
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, user: discord.Member, *, reason=None):
   await user.kick(reason=reason)
-  await ctx.send(f"{user} have been kicked sucessfully")
+  await ctx.send(f"{user} has been kicked sucessfully")
 
 @client.command()
 @commands.has_permissions(ban_members=True)
 async def ban(ctx, user: discord.Member, *, reason=None):
   await user.ban(reason=reason)
-  await ctx.send(f"{user} have been banned sucessfully")
+  await ctx.send(f"{user} has been banned sucessfully")
 
 @client.command()
+@commands.has_permissions(ban_members=True)
 async def unban(ctx, *, member):
   banned_users = await ctx.guild.bans()
   member_name, member_discriminator = member.split('#')
@@ -68,7 +71,7 @@ async def unban(ctx, *, member):
 
   if (user.name, user.discriminator) == (member_name, member_discriminator):
     await ctx.guild.unban(user)
-    await ctx.send(f"{user} have been unbanned sucessfully")
+    await ctx.send(f"{user} has been unbanned sucessfully")
     return
 
 @client.command()
@@ -77,7 +80,7 @@ async def copy(ctx, *, words):
 
 @client.command()
 async def invite(ctx):
-    await ctx.send("https://discord.com/api/oauth2/authorize?client_id=881650063628181574&permissions=261993005047&scope=bot")
+    await ctx.send("https://discord.com/api/oauth2/authorize?client_id=881650063628181574&permissions=292057984006&scope=bot")
 
 @client.command()
 @commands.has_permissions(manage_messages=True)
@@ -87,6 +90,9 @@ async def clear(ctx, ammount : int):
 @client.command()
 async def quote(ctx):
   await ctx.send(get_quote())
+
+#@tasks.loop(hours=1)
+#async def
 
 token = os.environ.get("TOKEN")
 keep_alive()
