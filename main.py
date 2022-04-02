@@ -14,8 +14,7 @@ statuses = ['imagine using slash commands', 'figure it out yourself', '.gitinvit
 async def on_ready():
     change_status.start()
     print('Bot is ready!')
-    channel = client.get_channel(958497979994632273)
-    await channel.send("Pybot is back lol also no more apeil fools")
+
 
 @client.event
 async def on_command_error(ctx, error):
