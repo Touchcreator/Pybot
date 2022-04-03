@@ -11,6 +11,8 @@ client = commands.Bot(command_prefix = '.')
 
 statuses = ['imagine using slash commands', 'figure it out yourself', '.invite', 'ur mom needs .help', 'with my toys, .help', 'say .8ball nerds', 'stfu retro didnt make this he needs .help', 'qwertyuiopasdfghjklzxcvbnm', 'its the next to the slash key']
 
+os.chdir("data")
+
 @client.event
 async def on_ready():
   change_status.start()
@@ -110,7 +112,9 @@ async def swagcheck(ctx):
   """How swag are you? Use this to check!"""
   await ctx.send("Swag Detector running... :sunglasses:")
   time.sleep(2)
-  await ctx.send(f':100: You are {random.randint(0,100)}% swag.')
+  swaggerness = random.randint(0,100)
+  await ctx.send(f':100: You are {swaggerness}% swag.')
+  await updatebal(ctx.author,change=swaggerness,mode="swag")
 
 @client.command()
 async def bitchcheck(ctx):
@@ -124,13 +128,61 @@ async def bitchcheck(ctx):
   bitches = random.randint(0,2)
   if (bitches == 0):
     await ctx.send(f'{bitches} bitches found. :neutral_face:')
+    await updatebal(ctx.author,change=bitches,mode="bitches")
   elif (bitches == 1):
     await ctx.send(f'{bitches} bitch found. :thumbsup:')
+    await updatebal(ctx.author,change=bitches,mode="bitches")
   else:
     await ctx.send(f'{bitches} bitches found. :question:')
+    await updatebal(ctx.author,change=bitches,mode="bitches")
 
-#@tasks.loop(hours=1)
-#async def
+@client.command()
+async def bal(ctx, user: discord.Member=None):
+  """Checks your balances."""
+  if not user:
+    user = ctx.author
+  await open_account(user)
+
+  users = await getdata()
+  user = user
+
+  bitch_count = users[str(user.id)]["bitches"]
+  swag_count = users[str(user.id)]["swag"]
+
+  #embed = discord.Embed(title = "Balance", color = 0x26F18B)
+  #embed.add_field(name = "Bitches", value = bitch_count)
+  #embed.add_field(name = "Swag", value = swag_count)
+
+  await ctx.send(f"{ctx.author} has {bitch_count} bitches, and {swag_count}% swaggy")
+
+async def open_account(user):
+  users = await getdata()
+
+
+  if str(user.id) in users:
+    return False
+  else:
+    users[str(user.id)] = {}
+    users[str(user.id)]["bitches"] = 0
+    users[str(user.id)]["swag"] = 0
+
+  with open("userstats.json","w") as f:
+    json.dump(users,f,indent=4)
+    
+  return True
+
+async def getdata():
+  with open("userstats.json","r") as f:
+    users = json.load(f)
+  return users
+
+async def updatebal(user,change,mode):
+  users = await getdata()
+  users[str(user.id)][mode] += change
+
+  with open("userstats.json","w") as f:
+    json.dump(users,f,indent=4)
+
 
 token = os.environ.get("TOKEN")
 keep_alive()
