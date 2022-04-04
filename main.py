@@ -9,9 +9,10 @@ import time
 
 client = commands.Bot(command_prefix = '.')
 
-statuses = ['imagine using slash commands', 'figure it out yourself', '.invite', 'ur mom needs .help', 'with my toys, .help', 'say .8ball nerds', 'stfu retro didnt make this he needs .help', 'qwertyuiopasdfghjklzxcvbnm', 'its the next to the slash key']
+statuses = ['imagine using slash commands', 'figure it out yourself', '.invite', 'ur mom needs .help', 'with my toys, .help', 'say .8ball nerds', 'stfu retro didnt make this he needs .help', 'qwertyuiopasdfghjklzxcvbnm', 'its the next to the slash key', 'say .bal first before doing the currency commands.']
 
 os.chdir("data")
+
 
 @client.event
 async def on_ready():
@@ -165,6 +166,7 @@ async def open_account(user):
     users[str(user.id)] = {}
     users[str(user.id)]["bitches"] = 0
     users[str(user.id)]["swag"] = 0
+    users[str(user.id)]["items"] = []
 
   with open("userstats.json","w") as f:
     json.dump(users,f,indent=4)
@@ -173,7 +175,7 @@ async def open_account(user):
 
 async def getdata():
   with open("userstats.json","r") as f:
-    users = json.load(f)
+    users = json.loads(f)
   return users
 
 async def updatebal(user,change,mode):
@@ -183,6 +185,18 @@ async def updatebal(user,change,mode):
   with open("userstats.json","w") as f:
     json.dump(users,f,indent=4)
 
+async def giveitem(user, item):
+    users = await getdata()
+    users[str(user)]["items"].append(item)
+  
+    with open("userstats.json", 'w') as f:
+        json.dump(users, f, indent=4)
+
+@client.command()
+async def give(ctx, person: discord.Member, theitem):
+  if ctx.author.id == 768608833622638624:
+    await giveitem(person.id, theitem)
+    await ctx.send(f'Gave {theitem} to {person.mention}!')
 
 token = os.environ.get("TOKEN")
 keep_alive()
